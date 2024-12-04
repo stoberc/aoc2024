@@ -1,5 +1,4 @@
-import pdb
-from aoc_utils import *
+from aoc_utils import DIRECTIONS4, DIRECTIONS8
 
 FNAME = "in4.txt"
 
@@ -8,7 +7,6 @@ height = len(grid)
 width = len(grid[0])
 
 count = 0
-
 for x in range(0, width):
     for y in range(0, height):
         if grid[y][x] == 'X':
@@ -36,8 +34,5 @@ for x in range(0, width):
                     if 0 <= rx < width and 0 <= ry < height and grid[ry][rx] == 'S':
                         subcount += 1
             if subcount == 2:
-                count += 1
-            
+                count += 1 
 print("Part2:", count)
-
-pdb.set_trace()
