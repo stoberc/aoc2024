@@ -1,4 +1,3 @@
-import pdb
 import re
 
 FNAME = "in5.txt"
@@ -26,7 +25,7 @@ def obeys_all_rules(sequence):
             return False
     return True
 
-# grab the middle value    
+# grab the middle value
 def score(line):
     return line[len(line) // 2]
     
@@ -43,6 +42,7 @@ print("Part 1:", part1)
 # I suspect this is O(n^2) down to O(n), but need to think about it more.
 #
 # in any case, this simply way is vastly faster to code, so I chose it for now
+# I need to brush up, but I think this mutates the input. Non-issue.
 def correct(bs):
     while not obeys_all_rules(bs):        
         for rule in rules:
@@ -52,16 +52,8 @@ def correct(bs):
                 bs[i0], bs[i1] = bs[i1], bs[i0]
     return bs
 
-bad_sequences = []
+part2 = 0
 for s in sequences:
     if not obeys_all_rules(s):
-        bad_sequences.append(s)
-    
-corrected = []    
-for s in bad_sequences:
-    corrected.append(correct(s))
-    
-part2 = sum(score(s) for s in corrected)
+        part2 += score(correct(s))
 print("Part 2:", part2)
-
-#pdb.set_trace()
