@@ -1,7 +1,12 @@
 import re
 
 FNAME = "in5.txt"
-    
+
+# notable input property:
+# every single possible pair of values has an associated rule
+# allows for creation of a master sequence (have not pursued)
+# also guarantees uniqueness in Part 2
+
 # parse the input
 # this approach works for both rules AND sequences
 def parse_line(line):
@@ -41,7 +46,8 @@ print("Part 1:", part1)
 # then just copy the master sequence using only values in the bad sequence
 # I suspect this is O(n^2) down to O(n), but need to think about it more.
 #
-# in any case, this simply way is vastly faster to code, so I chose it for now
+# In any case, this simply way is vastly faster to code, so I chose it for now.
+#
 # I need to brush up, but I think this mutates the input. Non-issue.
 def correct(bs):
     while not obeys_all_rules(bs):        
