@@ -1,18 +1,15 @@
 import pdb
+import re
 
 FNAME = "in5.txt"
     
 # parse the input
+# this approach works for both rules AND sequences
 def parse_line(line):
-    return [int(i) for i in line.split('|')]
-
-def parse_line2(line):
-    return [int(i) for i in line.split(',')]
-    
+    return [int(i) for i in re.findall('-?\d+', line)] # grab all the numbers
 chunks = [chunk.splitlines() for chunk in open(FNAME).read().split('\n\n')]
-
 rules = [parse_line(line) for line in chunks[0]]
-sequences = [parse_line2(line) for line in chunks[1]]
+sequences = [parse_line(line) for line in chunks[1]]
 
 # does the sequence obey the rule?
 def obeys(sequence, rule):
