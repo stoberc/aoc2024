@@ -37,10 +37,10 @@ def antis(x0, y0, x1, y1):
 def count_antinodes():
     antinodes = set()
     for a in antennas:
+        # there's probably some itertools function to write this more cleanly
         for i in range(len(antennas[a])):
             for j in range (i + 1, len(antennas[a])):
-                for p in antis(*antennas[a][i], *antennas[a][j]):
-                    antinodes.add(p)
+                antinodes.update(antis(*antennas[a][i], *antennas[a][j]))
     return len(antinodes)
                 
 print("Part 1:", count_antinodes())
@@ -49,13 +49,13 @@ print("Part 1:", count_antinodes())
 def antis(x0, y0, x1, y1):
     dx = x1 - x0
     dy = y1 - y0
-    results = [(x0, y0), (x1, y1)]
-    x, y = x1 + dx, y1 + dy
+    results = []
+    x, y = x1, y1
     while inbounds(x, y):
         results.append((x, y))
         x += dx
         y += dy
-    x, y = x0 - dx, y0 - dy
+    x, y = x0, y0
     while inbounds(x, y):
         results.append((x, y))
         x -= dx
