@@ -7,9 +7,9 @@
 
 FNAME = "in9.txt"
 
-data = open(FNAME).read().strip()
+diskmap = open(FNAME).read().strip()
 # small test case from problem description
-#data = "2333133121414131402"
+diskmap = "2333133121414131402"
 
 # take in the input and convert it to its file representation
 # since ids will definitely surpass single digits, 
@@ -20,13 +20,13 @@ def listify(seq):
     i = 0
     while i < len(seq):
         # stick on several copies of the current ID
-        for _ in range(int(data[i])):
+        for _ in range(int(seq[i])):
             result.append(id)
         i += 1
         id += 1
         # then, unless done, stick on several copies of blank space
         if i < len(seq):
-            for _ in range(int(data[i])):
+            for _ in range(int(seq[i])):
                 result.append(".")
             i += 1
     return result
@@ -63,7 +63,7 @@ def score(file):
             return checksum
         checksum += i * file[i]
     
-file = listify(data)
+file = listify(diskmap)
 file = repack(file)   
 print("Part 1:", score(file))
 
@@ -82,7 +82,7 @@ def repack(file):
         # we'll need to search for sufficient space starting at the beginning
         i = 0
         j = file.index(id)
-        filesize = int(data[id * 2])
+        filesize = int(diskmap[id * 2])
         
         # stop when you reach the file,
         # otherwise you'd accidentally end up moving it into a worse slot
@@ -110,6 +110,6 @@ def score(file):
     return checksum
     
 # reprocess
-file = listify(data)
+file = listify(diskmap)
 file = repack(file)
 print("Part 2:", score(file))
