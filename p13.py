@@ -17,15 +17,14 @@ def min_cost(dxa, dya, dxb, dyb, tx, ty, part2 = False):
         tx += 10000000000000
         ty += 10000000000000
         
-    beta = (tx * dya - ty * dxa) / (dxb * dya - dxa * dyb)
-    alpha = (tx * dyb - ty * dxb) / (dxa * dyb - dya * dxb)
-    
-    if whole(alpha) and whole(beta):
-        return int(alpha) * 3 + int(beta)
-    return 0
+    alpha_n = tx * dyb - ty * dxb
+    alpha_d = dxa * dyb - dya * dxb
+    beta_n = tx * dya - ty * dxa
+    beta_d = dxb * dya - dxa * dyb
 
-def whole(f):
-    return abs(f - round(f)) < 0.00000001
+    if alpha_n % alpha_d == 0 and beta_n % beta_d == 0:
+        return alpha_n // alpha_d * 3 + beta_n // beta_d
+    return 0
 
 print("Part 1:", sum(min_cost(*machine, False) for machine in machines))    
 print("Part 2:", sum(min_cost(*machine, True) for machine in machines))
