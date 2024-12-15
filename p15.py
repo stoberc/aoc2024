@@ -28,8 +28,7 @@ for command in commands:
     # if the push chain ends in a wall, do nothing
     if grid[desty][destx] == '#':
         continue
-    assert grid[desty][destx] == '.' # the push chain must end in empty space
-    
+   
     # if there's a box in the way, we can basically swap it into the last empty spot
     if grid[ny][nx] == 'O':    
         grid[ny][nx] = '.'
@@ -77,7 +76,6 @@ def canpush(x, y, direction):
         return True
     elif grid[y][x] == '#': # a wall can never be pushed
         return False
-    assert grid[y][x] in '[]' # a box can MAYBE be pushed if the thing beyond can be pushed
     dx, dy = direction
     if direction in [RIGHT, LEFT]:
         return canpush(x + 2 * dx, y, direction)
@@ -91,16 +89,12 @@ def canpush(x, y, direction):
 def push(x, y, direction):
     if grid[y][x] == '.': # pushing an empty space does nothing
         return
-    elif grid[y][x] == '#': # pushing w/o checking if possible
-        raise ValueError("Trying to push a wall!")
-    assert grid[y][x] in '[]'
     dx, dy = direction
     if direction in [RIGHT, LEFT]:
         push(x + dx, y, direction)
         grid[y][x + dx] = grid[y][x]
         grid[y][x] = '.'
     elif grid[y][x] == '[':
-        assert grid[y][x + 1] == ']'
         push(x, y + dy, direction)
         push(x + 1, y + dy, direction)
         grid[y + dy][x] = '['
@@ -108,8 +102,6 @@ def push(x, y, direction):
         grid[y][x] = '.'
         grid[y][x + 1] = '.'
     else:
-        assert grid[y][x] == ']'
-        assert grid[y][x - 1] == '['
         push(x, y + dy, direction)
         push(x - 1, y + dy, direction)
         grid[y + dy][x] = ']'
