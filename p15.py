@@ -78,25 +78,13 @@ def canpush(x, y, direction):
     elif grid[y][x] == '#': # a wall can never be pushed
         return False
     assert grid[y][x] in '[]' # a box can MAYBE be pushed if the thing beyond can be pushed
-    if direction == RIGHT:
-        assert grid[y][x + 1] == ']'
-        return canpush(x + 2, y, direction)
-    elif direction == LEFT:
-        assert grid[y][x - 1] == '['
-        return canpush(x - 2, y, direction)
-    elif direction == UP:
-        if grid[y][x] == '[':
-            return canpush(x, y - 1, direction) and canpush(x + 1, y - 1, direction)
-        else:
-            assert grid[y][x] == ']'
-            return canpush(x, y - 1, direction) and canpush(x - 1, y - 1, direction)
+    dx, dy = direction
+    if direction in [RIGHT, LEFT]:
+        return canpush(x + 2 * dx, y, direction)
+    elif grid[y][x] == '[':
+        return canpush(x, y + dy, direction) and canpush(x + 1, y + dy, direction)
     else:
-        assert direction == DOWN
-        if grid[y][x] == '[':
-            return canpush(x, y + 1, direction) and canpush(x + 1, y + 1, direction)
-        else:
-            assert grid[y][x] == ']'
-            return canpush(x, y + 1, direction) and canpush(x - 1, y + 1, direction)
+        return canpush(x, y + dy, direction) and canpush(x - 1, y + dy, direction)
             
 # push the target cell in the desired direction
 # precondition: canpush(x, y, direction)
@@ -106,58 +94,29 @@ def push(x, y, direction):
     elif grid[y][x] == '#': # pushing w/o checking if possible
         raise ValueError("Trying to push a wall!")
     assert grid[y][x] in '[]'
-    if direction == RIGHT:
-        assert grid[y][x] == '['
-        assert grid[y][x + 1] == ']'
-        push(x + 2, y, direction)
-        grid[y][x + 1] = '['
-        grid[y][x + 2] = ']'
+    dx, dy = direction
+    if direction in [RIGHT, LEFT]:
+        push(x + dx, y, direction)
+        grid[y][x + dx] = grid[y][x]
         grid[y][x] = '.'
-    elif direction == LEFT:
+    elif grid[y][x] == '[':
+        assert grid[y][x + 1] == ']'
+        push(x, y + dy, direction)
+        push(x + 1, y + dy, direction)
+        grid[y + dy][x] = '['
+        grid[y + dy][x + 1] = ']'
+        grid[y][x] = '.'
+        grid[y][x + 1] = '.'
+    else:
         assert grid[y][x] == ']'
         assert grid[y][x - 1] == '['
-        push(x - 2, y, direction)
-        grid[y][x - 1] = ']'
-        grid[y][x - 2] = '['
+        push(x, y + dy, direction)
+        push(x - 1, y + dy, direction)
+        grid[y + dy][x] = ']'
+        grid[y + dy][x - 1] = '['
         grid[y][x] = '.'
-    elif direction == UP:
-        if grid[y][x] == '[':
-            assert grid[y][x + 1] == ']'
-            push(x, y - 1, direction)
-            push(x + 1, y - 1, direction)
-            grid[y - 1][x] = '['
-            grid[y - 1][x + 1] = ']'
-            grid[y][x] = '.'
-            grid[y][x + 1] = '.'
-        else:
-            assert grid[y][x] == ']'
-            assert grid[y][x - 1] == '['
-            push(x, y - 1, direction)
-            push(x - 1, y - 1, direction)
-            grid[y - 1][x] = ']'
-            grid[y - 1][x - 1] = '['
-            grid[y][x] = '.'
-            grid[y][x - 1] = '.'
-    else:
-        assert direction == DOWN
-        if grid[y][x] == '[':
-            assert grid[y][x + 1] == ']'
-            push(x, y + 1, direction)
-            push(x + 1, y + 1, direction)
-            grid[y + 1][x] = '['
-            grid[y + 1][x + 1] = ']'
-            grid[y][x] = '.'
-            grid[y][x + 1] = '.'
-        else:
-            assert grid[y][x] == ']'
-            assert grid[y][x - 1] == '['
-            push(x, y + 1, direction)
-            push(x - 1, y + 1, direction)
-            grid[y + 1][x] = ']'
-            grid[y + 1][x - 1] = '['
-            grid[y][x] = '.'
-            grid[y][x - 1] = '.'
-    
+        grid[y][x - 1] = '.'
+
 # attempt to apply all commands
 for command in commands:
     dx, dy = DLUT[command]
