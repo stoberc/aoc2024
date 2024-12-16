@@ -7,6 +7,39 @@ DIRECTIONS8 = DIRECTIONS4 + ((1, 1), (-1, -1), (1, -1), (-1, 1))
 
 DIGITS = '0123456789'
 
+# what direction would dir be after turning left?
+def turn_left(dir):
+    if dir == UP:
+        return LEFT
+    elif dir == LEFT:
+        return DOWN
+    elif dir == DOWN:
+        return RIGHT
+    else:
+        return UP
+
+# what direciton would dir be after turning right?      
+def turn_right(dir):
+    if dir == UP:
+        return RIGHT
+    elif dir == RIGHT:
+        return DOWN
+    elif dir == DOWN:
+        return LEFT
+    else:
+        return UP
+    
+# what direction would dir be if you 180?
+def turn_around(dir):
+    if dir == UP:
+        return DOWN
+    elif dir == DOWN:
+        return UP
+    elif dir == RIGHT:
+        return LEFT
+    else:
+        return RIGHT
+        
 # take a collection of points and render them as '#' with non rendered-points as '.'
 # useful for e.g. aoc2021/p13 when a set of points represents a visual message
 def render(points):
