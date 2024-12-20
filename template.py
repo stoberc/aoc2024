@@ -21,4 +21,10 @@ data = [parse_line(line) for line in open(FNAME).read().splitlines()] # in chunk
 #height = len(grid)
 #width = len(grid[0])
 
+part1 = 0
+print("Part 1:", part1)
+
+part2 = 0
+print("Part 2:", part2)
+
 pdb.set_trace()
