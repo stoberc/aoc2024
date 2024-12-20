@@ -49,8 +49,7 @@ print("Part 1:", part1)
 # are worthy and legal cheat options
 part2 = 0
 for x, y in distances_from_s:
-    for nx in range(width):
-        for ny in range(height):
-            if grid[ny][nx] == '.' and abs(nx - x) + abs(ny - y) <= 20 and distances_from_s[(x, y)] + distances_from_e[(nx, ny)] + abs(nx - x) + abs(ny - y) <= distances_from_s[(ex, ey)] - 100:
-                part2 += 1
+    for nx, ny in distances_from_s:
+        if grid[ny][nx] == '.' and abs(nx - x) + abs(ny - y) <= 20 and distances_from_s[(x, y)] + distances_from_e[(nx, ny)] + abs(nx - x) + abs(ny - y) <= distances_from_s[(ex, ey)] - 100:
+            part2 += 1
 print("Part 2:", part2)
