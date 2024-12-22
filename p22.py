@@ -14,7 +14,7 @@ def iterate(s):
     s %= 16777216
     return s
     
-# compute each secret number sequence (redoing work from Part 1, TODO)
+# compute each secret number sequence
 # as you go, if you come across any new 4-value differential key, add that to the global score for this key
 part1 = 0 # rolled this in with part2 to save a few seconds
 scores = defaultdict(int)
