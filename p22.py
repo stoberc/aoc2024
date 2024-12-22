@@ -14,17 +14,9 @@ def iterate(s):
     s %= 16777216
     return s
     
-# execute 2000 steps of PRNG
-def mega_iterate(s):
-    for _ in range(2000):
-        s = iterate(s)
-    return s
-    
-part1 = sum(mega_iterate(s) for s in data)
-print("Part 1:", part1)
-
 # compute each secret number sequence (redoing work from Part 1, TODO)
 # as you go, if you come across any new 4-value differential key, add that to the global score for this key
+part1 = 0 # rolled this in with part2 to save a few seconds
 scores = defaultdict(int)
 for s in data:
     diffs = [] # log our most recent differentials
@@ -40,7 +32,9 @@ for s in data:
             if key not in keys:
                 scores[key] += x1
                 keys.add(key)
+    part1 += s
 
 # now just find the best key
+print("Part 1:", part1)
 part2 = max(scores.values())
 print("Part 2:", part2)
