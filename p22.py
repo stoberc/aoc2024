@@ -23,13 +23,12 @@ def mega_iterate(s):
 part1 = sum(mega_iterate(s) for s in data)
 print("Part 1:", part1)
 
-# compute all the differential sequences, 
-# logging the score associated with any newfound four-value sequence
-all_keys = set()
-score_luts = []
+# compute each secret number sequence (redoing work from Part 1, TODO)
+# as you go, if you come across any new 4-value differential key, add that to the global score for this key
+scores = defaultdict(int)
 for s in data:
-    diffs = []
-    score_lut = defaultdict(int)
+    diffs = [] # log our most recent differentials
+    keys = set() # all keys we've seen for this sequence to avoid having a later instance shadow an earlier instance
     x1 = s % 10
     for _ in range(2000):
         x0 = x1
@@ -38,20 +37,10 @@ for s in data:
         diffs.append(x1 - x0)
         if len(diffs) >= 4:
             key = tuple(diffs[-4:])
-            if key not in score_lut:
-                score_lut[key] = x1
-                all_keys.add(key)
-    score_luts.append(score_lut)
-    
-# find the score for some key by conffering all O(2k) LUTs
-def score(key):
-    return sum(score_lut[key] for score_lut in score_luts)
+            if key not in keys:
+                scores[key] += x1
+                keys.add(key)
 
-# loop through all possible subseqs to find the best one
-part2 = -9999999999
-for key in all_keys:
-    v = score(key)
-    if v > part2:
-        part2 = v
-        print("Candidate Part 2:", part2)
-print("Certified Part 2:", part2)
+# now just find the best key
+part2 = max(scores.values())
+print("Part 2:", part2)
