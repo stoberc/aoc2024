@@ -74,6 +74,17 @@ def rotate_clockwise(block):
     block = transpose(block)
     return [list(reversed(line)) for line in block]
 
+# find all subsets of a set
+# need to index, so input must be list
+# output will be list of lists e.g. 
+# powerset([a, b, c]) == [[], [a], [b], [c], [a, b], [a, c], [b, c], [a, b, c]]
+# though not actually in that order
+def powerset(set_list):
+    if len(set_list) == 0:
+        return [[]]
+    subpowerset = powerset(set_list[1:])
+    return [[set_list[0]] + s for s in subpowerset] + subpowerset
+    
 # handy functions to remember:
 # rfind to find the rightmost (index) of a substring
 # math.prod to find the product of an iterable
