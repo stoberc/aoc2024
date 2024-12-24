@@ -150,96 +150,17 @@ def split(sequence):
 # what is the minimum length that this sequence will expand to after a certain number of generations (dpads)?    
 memo = {}
 def minlength(sequence, generations):
-    if generations == 0:
+    if generations == 0: # base case
         return len(sequence)
-    if (sequence, generations) in memo:
+    if (sequence, generations) in memo: # already computed
         return memo[(sequence, generations)]
-    if sequence.count('A') > 1:
-        atomic_sequences = split(sequence)
-        result = sum(minlength(s, generations) for s in atomic_sequences)
-        memo[(sequence, generations)] = result
-        return result
-    
-    assert sequence.count('A') == 1
-    
-    # I thought a long time about if certain sequences were superior to others,
-    # but I finally figured out we can just recursively try all possibilities, so it doesn't really matter
-    # this means I suspect we could prune some of the options below and still get the right result
-    # but why bother? plus I might be wrong
-    
-    # this should cover all possible movement in the D-PAD, plus incidentally some in the numeric pad
-    if sequence == 'A': # stay at A
-        result = minlength('A', generations - 1)
-    elif sequence == '<A': # move from A to the up key OR from the right key to the down key OR from the down key to the left key
-        result = minlength('v<<A>>^A', generations - 1)
-    elif sequence == 'vA': # move from A to the right key
-        result = min(minlength('v<A^>A', generations - 1), minlength('<vA^>A', generations - 1), minlength('v<A>^A', generations - 1), minlength('<vA>^A', generations - 1))
-    elif sequence == '<vA': # move from A to the down key, option 1 
-        result = min(minlength('v<<A>A>^A', generations - 1), minlength('v<<A>A^>A', generations - 1))
-    elif sequence == 'v<A': # move from A to the down key, option 2 OR from the up key to the left key
-        result = min(minlength('v<A<A>>^A', generations - 1), minlength('<vA<A>>^A', generations - 1))
-    elif sequence == 'v<<A': # move from A to the left key
-        result = min(minlength('<vA<AA>>^A', generations - 1), minlength('v<A<AA>>^A', generations - 1))
-    elif sequence == '>>^A': # move from left key to A key
-        result = min(minlength('vAA^<A>A', generations - 1), minlength('vAA<^A>A', generations - 1))
-    elif sequence == '>^A': # move from left key to up key or down key to A key
-        result = min(minlength('vA^<A>A', generations - 1), minlength('vA<^A>A', generations - 1))
-    elif sequence == '^>A': # move from down key to A key option 2
-        result = min(minlength('<Av>A^A', generations - 1), minlength('<A>vA^A', generations - 1))
-    elif sequence == '^<A': # move from the right key to the up key option 1
-        result = minlength('<Av<A>>^A', generations - 1)
-    elif sequence == '<^A': # move from the right key to the up key option 2
-        result = minlength('v<<A>^A>A', generations - 1)
-    elif sequence == '>A': # move from up to A or down to right
-        result = minlength('vA^A', generations - 1)
-    elif sequence == '^A': # move from right to A
-        result = minlength('<A>A', generations - 1)
-    elif sequence == 'v>A': # move from up key to right key option 1
-        result = min(minlength('v<A>A^A', generations - 1), minlength('<vA>A^A', generations - 1))
-    elif sequence == '>vA': # move from up key to right key option 2
-        result = min(minlength('vA<A^>A', generations - 1), minlength('vA<A>^A', generations - 1))
-        
-    # need to handle all possible movements in the numeric pad too
-    elif sequence == '<^^A': # A to 5 option 1, 3 to 8 option 1, 2 to 7 option 1
-        result = minlength('v<<A>^AA>A', generations - 1)
-    elif sequence == '^^<A': # A to 5 option 2, 3 to 8 option 2, 2 to 7 option 2, 0 to 4
-        result = minlength('<AAv<A>>^A', generations - 1)
-    elif sequence == 'vvA': # 7 to 1, 8 to 2, 9 to 3, 5 to 0, 6 to A
-        result = min(minlength('v<AA^>A', generations - 1), minlength('<vAA^>A', generations - 1), minlength('v<AA>^A', generations - 1), minlength('<vAA>^A', generations - 1))
-    elif sequence == '^^^A': # A to 9, 0 to 8
-        result = minlength('<AAA>A', generations - 1)
-    elif sequence == '>vvvA': # 7 to 0 or 8 to A option 1
-        result = min(minlength('vA<AAA>^A', generations - 1), minlength('vA<AAA^>A', generations - 1))
-    elif sequence == 'vvv>A': # 8 to A option 2
-        result = min(minlength('v<AAA>A^A', generations - 1), minlength('<vAAA>A^A', generations - 1))
-    elif sequence == '^^<<A': # 3 to 7 option 1, A to 4
-        result = minlength('<AAv<AA>>^A', generations - 1)
-    elif sequence == '<<^^A': # 3 to 7 option 2
-        result = minlength('v<<AA>^AA>A', generations - 1)
-    elif sequence == 'vvvA': # 9 to A , 0 to 8
-        result = min(minlength('v<AAA^>A', generations - 1), minlength('<vAAA^>A', generations - 1), minlength('v<AAA>^A', generations - 1), minlength('<vAAA>^A', generations - 1))
-    elif sequence == '>>A': # 7 to 9, 4 to 6, 1 to 3
-        result = minlength('vAA^A', generations - 1)
-    elif sequence == '^>>A': # 1 to 6 option 1, 4 to 9 option 1
-        result = min(minlength('<A>vAA^A', generations - 1), minlength('<Av>AA^A', generations - 1))
-    elif sequence == '>>^A': # 1 to 6 optoin 2, 4 to 9 option 2
-        result = min(minlength('vAA^<A>A', generation - 1), minlength('VAA<^A>A', generations - 1))
-    elif sequence == '>^^A': # 1 to 8 option 1, 2 to 9 option 1, 0 to 6 option 1
-        result = min(minlength('vA^<AA>A', generations - 1), minlength('vA<^AA>A', generations - 1))
-    elif sequence == '^^>A': # 1 to 8 option 2, 2 to 9 option 2, 0 to 6 option 2
-        result = min(minlength('<AA>vA^A', generations - 1), minlength('<AAv>A^A', generations - 1))
-    elif sequence == '^<<A': # A to 1, 3 to 4 option 1, 6 to 7 option 1
-        result = minlength('<Av<AA>>^A', generations - 1)
-    elif sequence == '<<^A': # 3 to 4 option 2, 6 to 7 option 2
-        result = minlength('v<<AA>^A>A', generations - 1)
-    elif sequence == '^^A': # A to 6, 0 to 5, 1 to 7, 2 to 8, 3 to 9
-        result = minlength('<AA>A', generations - 1)
-    else: # there could be a few that I missed--I made sure to cover all options for my input and the test input
-        raise ValueError("Unimplemented atomic sequence in minlength:", sequence)
-        
+    if sequence.count('A') > 1: # complex sequence can be broken down into atomic sequences
+        result = sum(minlength(s, generations) for s in split(sequence))
+    else: # for an atomic sequence, just compute the minimum over all possible next versions
+        result = min(minlength(s, generations - 1) for s in all_cheapest_paths(sequence))
     memo[(sequence, generations)] = result
     return result
-        
+    
 # score the minimum length of this input code after some number of generations
 def score(seq, generations):
     # -1 since the all_cheapest_paths already performs one generation
